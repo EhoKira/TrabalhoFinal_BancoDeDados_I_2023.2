@@ -1,0 +1,70 @@
+-- Criação da Tabela Genero de Filme
+CREATE TABLE genero_filme (
+	cod_genero_filme INTEGER NOT NULL,
+  	nome_genero_filme VARCHAR(45) not NULL,
+  CONSTRAINT pk_genero_filme
+  	PRIMARY KEY (cod_genero_filme)
+);
+
+-- Criação da Tabela Filme
+CREATE table filme (
+	cod_filme INTEGER not NULL,
+  	nome_filme VARCHAR(40) NOT NULL,
+  	cod_genero_filme INTEGER not NULL,
+  	valor_compra NUMERIC(10, 2) not NULL,
+  CONSTRAINT pk_filme
+  	PRIMARY KEY (cod_filme),
+  CONSTRAINT fk_filme_generos_filme
+  	FOREIGN KEY (cod_genero_filme)
+  	REFERENCES genero_filme (cod_genero_filme)
+);
+
+-- Criação da Tabela UF
+CREATE table uf (
+  	sigla_uf CHAR(2) NOT NULL,
+  	nome_uf VARCHAR(45) NOT NULL,
+  CONSTRAINT pk_uf
+  	PRIMARY KEY (sigla_uf)
+);
+
+-- Criação da Tabela Cidade
+create table cidade (
+	cod_cidade INTEGER not NULL,
+  	nome_cidade VARCHAR(45) not NULL,
+  	sigla_uf CHAR(2) not NULL,
+  	CONSTRAINT pk_cidade
+  		PRIMARY KEY (cod_cidade),
+  	CONSTRAINT fk_cidade_uf
+  		FOREIGN key (sigla_uf)
+  		REFERENCES uf (sigla_uf)
+);
+
+-- Criação da Tabela Cliente
+CREATE TABLE cliente (
+	cod_cliente INTEGER NOT NULL,
+  	nome_cliente VARCHAR(45) NOT NULL,
+  	rua_cliente VARCHAR(45) NOT NULL,
+  	cod_cidade INTEGER NOT NULL,
+  	telefone_cliente CHAR(15) NULL,
+  	CONSTRAINT pk_cliente
+  		PRIMARY KEY (cod_cliente),
+  	CONSTRAINT fk_cliente_cidades
+  		FOREIGN key (cod_cidade)
+  		REFERENCES cidade (cod_cidade)
+);
+
+-- Criação da Tabela Locação
+create table locacao (
+	cod_cliente INTEGER NOT NULL,
+  	cod_filme INTEGER not NULL,
+  	data_locacao DATE NOT NULL,
+  	valor_locacao NUMERIC(10, 2) NOT NULL,
+  	CONSTRAINT pk_locacao
+  		PRIMARY key (cod_cliente, cod_filme, data_locacao),
+  	CONSTRAINT fk_locacao_filme
+  		foreign key (cod_filme)
+  		REFERENCES filme(cod_filme),
+  	CONSTRAINT fk_locacaos_cliente
+  		FOREIGN KEY (cod_cliente)
+  		REFERENCES cliente(cod_cliente)
+);
